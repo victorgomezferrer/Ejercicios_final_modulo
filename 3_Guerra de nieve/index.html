@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guerra bolas de nieve</title>
+
+</head>
+
+<body>
+
+    <script>
+        // clase padre
+        class Jugador {
+            constructor(nombre, vidas, dmg) {
+                this.nombre = nombre;
+                this.vidas = vidas;
+                this.dmg = dmg;
+            }
+            recibirAtaque(dmg) {
+                this.vidas -= dmg;
+             
+            }
+        }
+
+        class Guerrero extends Jugador {
+            constructor(nombre) {
+                super(nombre, 30, 1);
+            }
+        }
+
+        class Mago extends Jugador {
+            constructor(nombre) {
+                super(nombre, 20, 2);
+            }
+        }
+
+        class Equipo {
+            constructor() {
+                this.jugadores = [];
+            }
+            agregarJugador(jugador) {
+                this.jugadores.push(jugador);
+            }
+            todosJugadoresMuertos() {
+                return this.jugadores.every(jugador => jugador.vidas <= 0);
+            }
+            seleccionarJugadorAleatorio() {
+                const jugadoresVivos = this.jugadores.filter((jugador) => jugador.vidas > 0);
+                if (jugadoresVivos.length === 0) {
+                    return null;
+                }
+                const jugadorAleatorio = jugadoresVivos[Math.floor(Math.random() * jugadoresVivos.length)];
+                return jugadorAleatorio;
+            }
+        }
+
+
+        const mugiwaras = new Equipo();
+        const yonkous = new Equipo();
+        //añadimos los jugadores que queramos  y sus nombres:)
+        mugiwaras.agregarJugador(new Guerrero('Luffy'));
+        mugiwaras.agregarJugador(new Mago('Law'));
+
+        yonkous.agregarJugador(new Guerrero('Kaido'));
+        yonkous.agregarJugador(new Mago('Big Mom'));
+
+
+
+
+        class Guerra {
+            constructor() {
+                this.equipo1 = []
+                this.equipo2 = []
+            }
+            agregarEquipo() {
+                this.equipo1 = mugiwaras
+                this.equipo2 = yonkous
+
+            }
+            finBatalla(){
+                if (this.equipo1.todosJugadoresMuertos()) return alert('ganan los yonkous')
+                else if (this.equipo1.todosJugadoresMuertos()) return alert('ganan los mugiwaras')
+            }
+            // aqui comienza la batalla
+            simular() {
+                setInterval(() => this.batalla(), 1000);
+            }
+            batalla() {
+
+                const atacanteEquipo1 = this.equipo1.seleccionarJugadorAleatorio();
+                const objetivoEquipo2 = this.equipo2.seleccionarJugadorAleatorio();
+
+                objetivoEquipo2.recibirAtaque(atacanteEquipo1.dmg);
+
+                const atacanteEquipo2 = this.equipo2.seleccionarJugadorAleatorio();
+                const objetivoEquipo1 = this.equipo1.seleccionarJugadorAleatorio();
+
+                objetivoEquipo1.recibirAtaque(atacanteEquipo2.dmg);
+
+
+                this.finBatalla()
+                console.log(this.equipo1);
+                console.log(this.equipo2);
+            }
+        }
+        //   y aqui lo ejecutamos todo
+        const guerra = new Guerra();
+        guerra.agregarEquipo();
+
+        guerra.simular();
+
+        console.log(guerra)
+    </script>
+</body>
+
+</html>

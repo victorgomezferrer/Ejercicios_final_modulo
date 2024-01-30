@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+</head>
+
+<body>
+    <div id="app">
+        <h1>Lista de Tareas</h1>
+
+        <form id="formularioGlobal">
+            <label for="inputTitulo">Título:</label>
+            <input type="text" id="inputTitulo" required>
+
+            <label for="inputDescripcion">Descripción:</label>
+            <input type="text" id="inputDescripcion" required>
+
+            <button type="submit">Agregar tarea</button>
+        </form>
+
+        <ul id="listaDeTareas">
+        </ul>
+
+        <button id="botonMarcarTodo">Marcar todas como completadas</button>
+    </div>
+    <script>
+        // VARIABLES GLOBALWES
+            const formularioGlobal = document.getElementById('formularioGlobal');
+            const listaDeTareas = document.getElementById('listaDeTareas');
+            const botonMarcarTodo = document.getElementById('botonMarcarTodo');
+
+        // EVENTO SUBMIT PARA EL BOTON AGRWEGAR TAREA
+            formularioGlobal.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const inputTitulo = document.getElementById('inputTitulo').value;
+                const inputDescripcion = document.getElementById('inputDescripcion').value;
+
+                if (inputTitulo && inputDescripcion) {
+                    createTask(inputTitulo, inputDescripcion);
+                    // esto para limpiar el form al darle al boton
+                     formularioGlobal.reset();
+                }
+            });
+            // evento que al hacer click ejecuta la funcion borrar todo 
+            botonMarcarTodo.addEventListener('click', function () {
+                borrarTodo();
+            });
+            // esta es la funcion para crear los li el boton, y que el contenido sea el del input del form
+            function createTask(inputTitulo, inputDescripcion) {
+                const li = document.createElement('li');
+            
+                li.innerHTML = `<strong>${inputTitulo}</strong>: ${inputDescripcion} <button class="completeBtn">Completada</button>`;
+                listaDeTareas.appendChild(li);
+                // el evento que ejecuta el .removeChild que elimina el boton y el texto entro del li
+                const completeBtn = li.querySelector('.completeBtn');
+                completeBtn.addEventListener('click', function () {
+                    listaDeTareas.removeChild(li);
+                });
+            }
+
+            function borrarTodo() {
+                listaDeTareas.innerHTML = '';
+            }
+ 
+    </script>
+</body>
+
+</html>

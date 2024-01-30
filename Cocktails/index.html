@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coctails 1</title>
+    <script src="../Cocktails/constants/cocktails.js"></script>
+</head>
+
+<body>
+
+    <div>
+        <canvas id="myChart"></canvas>
+    </div>
+    <div>
+        <canvas id="myChart2"></canvas>
+    </div>
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- codigo JavaScript -->
+    <script>
+        // constantes globales
+
+        const ctx = document.getElementById('myChart');
+        const ctx2 = document.getElementById('myChart2');
+
+        // ejercicio 1
+        let cocktailsPerYear = {}
+        cocktails.forEach(element => {
+            let years = new Date(element.dateModified)
+            let año = years.getFullYear()
+            cocktailsPerYear[año] = (cocktailsPerYear[año] || 0) + 1
+        });
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Object.keys(cocktailsPerYear),
+                datasets: [{
+                    label: 'Cocteles por año',
+                    data: Object.values(cocktailsPerYear),
+                    borderWidth: 5,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+
+        // ejercicio 2 
+        function contarIngredientes(cocktails, ingrediente) {
+            let numCocktails = 0;
+
+            for (const cocktail of cocktails) {
+                for (let i = 1; i <= 15; i++) {
+                    const nombreIngrediente = cocktail[`strIngredient${i}`];
+
+                    if (nombreIngrediente && nombreIngrediente.toLowerCase() === ingrediente.toLowerCase()) {
+                        numCocktails++;
+
+                    }
+                }
+            }
+
+            return numCocktails;
+        }
+
+        const cantidadRum = contarIngredientes(cocktails, 'Rum');
+        const cantidadGin = contarIngredientes(cocktails, 'Gin');
+        const cantidadVodka = contarIngredientes(cocktails, 'Vodka');
+        const cantidadWhiskey = contarIngredientes(cocktails, 'Whiskey');
+        const cantidadTequila = contarIngredientes(cocktails, 'Tequila');
+
+
+
+
+        new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Rum',
+                    'Gin',
+                    'Vodka',
+                    'Whiskey',
+                    'Tequila'
+                ],
+                datasets: [{
+                    label: 'My First Dataset',
+                    data: [cantidadRum, cantidadGin, cantidadVodka, cantidadWhiskey, cantidadTequila],
+                    backgroundColor: [
+                        'rgb(0, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)',
+                        'rgb(267, 59, 135)',
+                        'rgb(78, 62, 35)',
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+
+
+        })
+
+    </script>
+</body>
+
+</html>

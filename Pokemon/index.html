@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokeApi</title>
+</head>
+
+<body>
+    <div>
+        <label for="Buscador Pokemon">Buscador Pokemon
+            <input id="input" type="number">
+            <button id="boton">Gotta catch 'em all</button>
+            <button id="botonRandom">Random Pokemon</button>
+        </label>
+    </div>
+    <div>
+        <h1 id="nombrePokemon">Bienvenido al buscador N1 de Pokemons</h1>
+        <img id="fotoPokemon" src="https://raw.githubusercontent.com/PokeAPI/media/master/logo/pokeapi_256.png"
+            alt="imgPokemonActual">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // variables globales
+        const pokemonName = document.getElementById('nombrePokemon')
+        const pokemonImg = document.getElementById('fotoPokemon')
+        const boton = document.getElementById('boton')
+        const botonRandom = document.getElementById('botonRandom')
+        const inputSearch = document.getElementById('input')
+        let chart;
+
+
+        // evento random
+        botonRandom.addEventListener('click', () => {
+            const pokemon = Math.floor(Math.random() * 1302)
+            console.log(pokemon)
+            fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+                .then(response => response.json())
+                .then(data => {
+                    
+                    pokemonName.innerText = data.name
+                    pokemonImg.src = data.sprites.front_default
+                    if (!data.sprites.front_default) pokemonImg.src = data.sprites.back_default
+
+
+                    else if (chart) {
+                        chart.destroy();
+                    }
+                    const ctx = document.getElementById('myChart');
+                    const baseStat = []
+                    const names = []
+                    data.stats.forEach(element => {
+                        baseStat.push(element.base_stat)
+                        names.push(element.stat.name)
+                    });
+
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: names,
+                            datasets: [{
+                                label: '# of Votes',
+                                data: baseStat,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    })
+                    // .catch((error)=>{alert('El Pokemon no tiene datos en la pokeapi')})
+
+
+                });
+
+        })
+        // evento busqueda
+        boton.addEventListener('click', () => {
+            const pokemon = inputSearch.value
+            if (!pokemon || pokemon > 1302 || pokemon <= 0) return alert("Solamente disponemos de 1302 Pokemons a consultar, introduzca un valor de 1-1302")
+
+
+            fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+                .then(response => response.json())
+                .then(data => {
+                
+                    pokemonName.innerText = data.name
+                    pokemonImg.src = data.sprites.front_default
+                    if (!data.sprites.front_default) pokemonImg.src = data.sprites.back_default
+
+
+                    if (chart) {
+                        chart.destroy();
+                    }
+
+                    const ctx = document.getElementById('myChart');
+                    const baseStat = []
+                    const names = []
+                    data.stats.forEach(element => {
+                        baseStat.push(element.base_stat)
+                        names.push(element.stat.name)
+                    });
+
+                    chart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: names,
+                            datasets: [{
+                                label: '# of Votes',
+                                data: baseStat,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+
+
+                }).catch((error)=>{alert('El Pokemon no tiene datos en la pokeapi')})
+
+        })
+        
+    </script>
+
+</body>
+
+</html>

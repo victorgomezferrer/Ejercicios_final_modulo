@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../Cocktails/constants/cocktails.js"></script>
+</head>
+
+<body>
+    <ul id="cocktailList">
+    </ul>
+
+    <div id="cocktailDetails">
+    </div>
+
+    <script>
+        // variables globales
+        const ultimos20Cocktails = cocktails.slice(-20)
+        const cocktailList = document.getElementById('cocktailList');
+        const cocktailDetails = document.getElementById('cocktailDetails');
+
+
+        // la lista de los ultimos 20 cocteles
+        ultimos20Cocktails.forEach(coctel => {
+
+            const listItem = document.createElement('li');
+            listItem.textContent = coctel.strDrink;
+            cocktailList.appendChild(listItem);
+
+            // evento que al hacer click noos muestra detalles del coctel
+            listItem.addEventListener('click', () => {
+                mostrarDetalles(coctel)
+            });
+
+        });
+        // este es el menu desplegable conm la info
+        const mostrarDetalles = (coctel) => {
+            cocktailDetails.innerHTML =
+                `<h2>${coctel.strDrink}</h2>
+      <img src="${coctel.strDrinkThumb}" alt="${coctel.strDrink} Image">
+      <p><strong>Ingredientes:</strong></p>
+    <ul>
+      <li>${coctel.strMeasure1} ${coctel.strIngredient1}</li>
+      <li>${coctel.strMeasure2} ${coctel.strIngredient2}</li>
+      <li>${coctel.strMeasure3} ${coctel.strIngredient3}</li>
+      <li>${coctel.strMeasure4} ${coctel.strIngredient4}</li>
+      <li>${coctel.strMeasure5} ${coctel.strIngredient5}</li>
+      <li>${coctel.strMeasure6} ${coctel.strIngredient6}</li>
+     
+    </ul>
+          <p><strong>Instrucciones:</strong> ${coctel.strInstructions}</p>
+          <p><strong>Vaso:</strong> ${coctel.strGlass}</p>
+          <p><strong>Tipo de Alcohol:</strong> ${coctel.strAlcoholic}</p>
+          <p><strong>Sabor:</strong> ${coctel.strCategory}</p>
+      `;
+        }
+
+    </script>
+</body>
+
+</html>
